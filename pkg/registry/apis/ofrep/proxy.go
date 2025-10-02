@@ -15,6 +15,7 @@ import (
 	"strconv"
 
 	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
+	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/util/proxyutil"
 	goffmodel "github.com/thomaspoignant/go-feature-flag/cmd/relayproxy/model"
 )
@@ -25,8 +26,8 @@ func (b *APIBuilder) proxyAllFlagReq(ctx context.Context, isAuthedUser bool, w h
 
 	proxy, err := b.newProxy(ofrepPath)
 	if err != nil {
-		span.RecordError(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		_ = tracing.Error(span, err)
 		return
 	}
 
@@ -72,8 +73,8 @@ func (b *APIBuilder) proxyFlagReq(ctx context.Context, flagKey string, isAuthedU
 	proxy, err := b.newProxy(path.Join(ofrepPath, flagKey))
 	if err != nil {
 		b.logger.Error("Failed to create proxy", "key", flagKey, "error", err)
-		span.RecordError(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		_ = tracing.Error(span, err)
 		return
 	}
 

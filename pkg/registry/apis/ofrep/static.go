@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/grafana/grafana/pkg/infra/tracing"
 	goffmodel "github.com/thomaspoignant/go-feature-flag/cmd/relayproxy/model"
 	"go.opentelemetry.io/otel/attribute"
 )
@@ -15,8 +16,8 @@ func (b *APIBuilder) evalAllFlagsStatic(ctx context.Context, isAuthedUser bool, 
 	result, err := b.staticEvaluator.EvalAllFlags(ctx)
 	if err != nil {
 		b.logger.Error("Failed to evaluate all static flags", "error", err)
-		span.RecordError(err)
 		http.Error(w, "failed to evaluate flags", http.StatusInternalServerError)
+		_ = tracing.Error(span, err)
 		return
 	}
 
@@ -47,8 +48,8 @@ func (b *APIBuilder) evalFlagStatic(ctx context.Context, flagKey string, w http.
 	result, err := b.staticEvaluator.EvalFlag(ctx, flagKey)
 	if err != nil {
 		b.logger.Error("Failed to evaluate static flag", "key", flagKey, "error", err)
-		span.RecordError(err)
 		http.Error(w, "failed to evaluate flag", http.StatusInternalServerError)
+		_ = tracing.Error(span, err)
 		return
 	}
 
