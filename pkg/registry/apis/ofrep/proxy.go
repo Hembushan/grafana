@@ -2,6 +2,7 @@ package ofrep
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
@@ -14,15 +15,19 @@ import (
 	"strconv"
 
 	"github.com/grafana/grafana/pkg/cmd/grafana-cli/logger"
+	"github.com/grafana/grafana/pkg/infra/tracing"
 	"github.com/grafana/grafana/pkg/util/proxyutil"
-
 	goffmodel "github.com/thomaspoignant/go-feature-flag/cmd/relayproxy/model"
 )
 
-func (b *APIBuilder) proxyAllFlagReq(isAuthedUser bool, w http.ResponseWriter, r *http.Request) {
+func (b *APIBuilder) proxyAllFlagReq(ctx context.Context, isAuthedUser bool, w http.ResponseWriter, r *http.Request) {
+	_, span := tracer.Start(ctx, "ofrep.proxy.evalAllFlags")
+	defer span.End()
+
 	proxy, err := b.newProxy(ofrepPath)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		_ = tracing.Error(span, err)
 		return
 	}
 
@@ -61,11 +66,15 @@ func (b *APIBuilder) proxyAllFlagReq(isAuthedUser bool, w http.ResponseWriter, r
 	proxy.ServeHTTP(w, r)
 }
 
-func (b *APIBuilder) proxyFlagReq(flagKey string, isAuthedUser bool, w http.ResponseWriter, r *http.Request) {
+func (b *APIBuilder) proxyFlagReq(ctx context.Context, flagKey string, isAuthedUser bool, w http.ResponseWriter, r *http.Request) {
+	_, span := tracer.Start(ctx, "ofrep.proxy.evalFlag")
+	defer span.End()
+
 	proxy, err := b.newProxy(path.Join(ofrepPath, flagKey))
 	if err != nil {
 		b.logger.Error("Failed to create proxy", "key", flagKey, "error", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		_ = tracing.Error(span, err)
 		return
 	}
 
