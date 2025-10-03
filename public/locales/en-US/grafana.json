@@ -8329,6 +8329,21 @@
       "log-base": "Log base"
     },
     "builder": {
+      "annotations": {
+        "category": "Annotations",
+        "desc": {
+          "region-opacity": "Sets the annotation region opacity",
+          "show-line-marker": "Toggles the vertical annotation indicator line in the visualization",
+          "show-regions": "Toggles the region overlay in the visualization"
+        },
+        "lane": {
+          "desc": "Breaks each annotation frame into a separate row in the visualization",
+          "name": "Enable multi lane annotations"
+        },
+        "region-opacity": "Region opacity",
+        "show-line-marker": "Enable annotation indicator line",
+        "show-regions": "Enable region overlay"
+      },
       "axis": {
         "category-axis": "Axis",
         "color-label": "Color",
@@ -12991,9 +13006,11 @@
       "label-tags": "Tags",
       "placeholder-add-tags": "Add tags",
       "save": "Save",
-      "saving": "Saving"
+      "saving": "Saving",
+      "tooltip-close": "Close"
     },
     "annotation-tooltip2": {
+      "tooltip-close": "Close",
       "tooltip-delete": "Delete",
       "tooltip-edit": "Edit"
     },
@@ -13088,6 +13105,16 @@
     }
   },
   "transformers": {
+    "annotation-transformer-editor": {
+      "color": "Color field",
+      "default-color": "Default color",
+      "id": "Annotation ID",
+      "start-time": "Start time",
+      "tags": "Tags",
+      "text": "Text",
+      "timeEnd": "End time",
+      "title": "Title"
+    },
     "axis-editor": {
       "log-mode-options": {
         "description": {
@@ -13186,6 +13213,22 @@
       "tooltip-input-format": "Specify the format of the input field so Grafana can parse the date string correctly.",
       "tooltip-specify-the-output-format": "Specify the output format.",
       "tooltip-timezone-manually": "Set the timezone of the date manually"
+    },
+    "convert-frame-type-transformer-editor": {
+      "convert-frame-type": "Convert frame type",
+      "description": {
+        "convert-frame-type": "Convert frame data topic (e.g., series to annotations/exemplars)."
+      },
+      "label": {
+        "annotation": "Annotation",
+        "annotation-description": "Convert to Annotation frame(s)",
+        "exemplar": "Exemplar",
+        "exemplar-description": "Convert to Exemplar frame(s)",
+        "target-data-topic": "Target data topic"
+      },
+      "placeholder": {
+        "data-topic": "Select data topic"
+      }
     },
     "cumulative-options-editor": {
       "label-calculation": "Calculation",
